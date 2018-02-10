@@ -85,7 +85,6 @@ class UserManager(BaseUserManager):
         return self.create_user(
             email, password, is_staff=True, is_superuser=True, **extra_fields)
 
-
 class User(PermissionsMixin, AbstractBaseUser):
     email = models.EmailField(unique=True)
     addresses = models.ManyToManyField(Address, blank=True)
@@ -125,3 +124,9 @@ class User(PermissionsMixin, AbstractBaseUser):
 
     def get_short_name(self):
         return self.email
+
+class Company():
+    company_name = models.CharField(max_length=256, unique=True)
+    company_desc = models.CharField(max_length=256, blank=True)
+    company_logo = models.ImageField(width_field=None, height_field=None, blank=None)
+
