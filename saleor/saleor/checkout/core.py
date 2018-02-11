@@ -49,6 +49,7 @@ class Checkout:
         self._shipping_method = None
         self._shipping_address = None
 
+
     @classmethod
     def from_storage(cls, storage_data, cart, user, tracking_code):
         """Restore a previously serialized checkout session.
@@ -393,6 +394,8 @@ class Checkout:
             total
             for shipment, shipping_cost, total in self.deliveries)
         total = sum(cost_iterator, zero)
+        if self.user.is_veteran:
+            total = zero
         return total if self.discount is None else self.discount.apply(total)
 
 
