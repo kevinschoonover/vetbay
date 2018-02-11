@@ -80,6 +80,7 @@ class UserManager(BaseUserManager):
             user.set_password(password)
         if is_veteran:
             user.set_veteran(is_veteran)
+        user.set_veteran(is_veteran)
         user.save()
         return user
 
@@ -136,7 +137,7 @@ class User(PermissionsMixin, AbstractBaseUser):
     def get_short_name(self):
         return self.email
 
-    def set_veteran(self, isornot):
+    def set_veteran(self, isornot=False):
         self.is_veteran = isornot
 
     def get_veteran_status(self):

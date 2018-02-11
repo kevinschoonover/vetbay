@@ -70,8 +70,8 @@ class LoginForm(django_forms.AuthenticationForm):
 class SignupForm(forms.ModelForm):
     password = forms.CharField(
         widget=forms.PasswordInput)
-    is_veteran = forms.BooleanField(
-        widget=forms.CheckboxInput
+    is_veteran = forms.NullBooleanField(
+        widget=forms.NullBooleanSelect
     )
 
     class Meta:
@@ -97,7 +97,10 @@ class SignupForm(forms.ModelForm):
         password = self.cleaned_data['password']
         is_veteran = self.cleaned_data['is_veteran']
         user.set_password(password)
-        user.set_veteran(is_veteran)
+        if is_veteran == True:
+            user.set_veteran(is_veteran)
+        else:
+            user.set_veteran(False)
         if commit:
             user.save()
         return user
