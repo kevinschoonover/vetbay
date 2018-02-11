@@ -265,6 +265,14 @@
       <div id="base-modal" class="modal"></div>
       <div id="base-modal-fixed" class="modal modal-fixed-footer"></div>
       <div class="container">
+        {% if user.is_staff %}
+          <h1 style="text-align: center">Admin Dashboard</h1>
+        {% elif user.company %}
+          <h1 style="text-align: center">{{user.company.company_name}} Dashboard</h1>
+        {% else %}
+          <h1 style="text-align: center">You shouldn't be here!</h1>
+        {% endif %}
+
         {% block content %}{% endblock %}
       </div>
     </main>

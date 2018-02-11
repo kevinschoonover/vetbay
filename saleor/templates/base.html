@@ -48,7 +48,7 @@
         <div class="col-6">
           <ul class="float-right">
             {% if user.is_authenticated %}
-              {% if user.is_staff or request.impersonator.is_staff %}
+              {% if user.is_staff or request.impersonator.is_staff or user.company %}
                 <li>
                   <a href="{% url "dashboard:index" %}" target="_blank" rel="noopener">
                     {% trans "Dashboard" context "Main navigation item" %}
@@ -201,6 +201,13 @@
               </a>
             </li>
             {% if user.is_authenticated %}
+              {% if user.company and not user.is_staff %}
+              <li>
+                <a href="{% url "dashboard:index" %}" target="_blank" rel="noopener">
+                  {% trans "Company Dashboard" context "Main navigation item" %}
+                </a>
+              </li>
+              {% endif %}
               {% if user.is_staff %}
                 <li>
                   <a href="{% url "dashboard:index" %}" target="_blank" rel="noopener">
