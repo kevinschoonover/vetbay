@@ -88,13 +88,13 @@ class UserManager(BaseUserManager):
 class Company(models.Model):
     company_name = models.CharField(max_length=256, unique=True)
     company_desc = models.CharField(max_length=256, blank=True)
-    company_logo = models.ImageField(width_field=None, height_field=None, blank=None)
+    company_logo = models.ImageField(width_field=None, height_field=None, blank=True, null=True)
     company_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
 class User(PermissionsMixin, AbstractBaseUser):
     email = models.EmailField(unique=True)
     addresses = models.ManyToManyField(Address, blank=True)
-    company = models.OneToOneField(Company, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now, editable=False)

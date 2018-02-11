@@ -13,9 +13,9 @@
   <div class="col-lg-10 col-sm-12 m-auto">
     <div class="row login">
       <div class="col-md-6 login__form">
-        <form method="post" action="{% url 'account:signup' %}" novalidate>
+        <form method="post" action="{% url 'account:company' %}" novalidate>
           <fieldset>
-            <h3>{% trans "Create an account" context "Signup form title" %}</h3>
+            <h3>{% trans "Create a Company" context "Signup form title" %}</h3>
             {% csrf_token %}
             {% bootstrap_form form %}
             {% if REDIRECT_FIELD_VALUE %}

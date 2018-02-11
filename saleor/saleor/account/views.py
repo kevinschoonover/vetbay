@@ -48,14 +48,25 @@ def signup(request):
 
 @login_required
 def company_signup(request):
-    form = CompanySignupForm(request.POST, request.FILES)
-    if form.is_valid():
-        out = form.save()
-        return redirect('home')
-    ctx = {'form':form}
-    return TemplateResponse(request, 'account/company.html', ctx)
+    if request.POST:
+        form = CompanySignupForm(request.POST, request.FILES)
+        print(form)
+        if form.is_valid():
+            out = form.save()
+            messages.success(request, pgettext(
+                             'Company Message', '{} successfully '
+                             'created.'.format(out.company_name)))
 
-      
+            return redirect('home')
+        else:
+            ctx = {'form':form}
+            return TemplateResponse(request, 'account/company.html', ctx)
+
+    else:
+        ctx = {'form': CompanySignupForm()}
+        return TemplateResponse(request, 'account/company.html')
+
+
 def password_reset(request):
     kwargs = {
         'template_name': 'account/password_reset.html',
