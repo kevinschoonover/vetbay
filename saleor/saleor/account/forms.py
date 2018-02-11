@@ -4,7 +4,7 @@ from django.contrib.auth import forms as django_forms, update_session_auth_hash
 from django.utils.translation import pgettext, pgettext_lazy
 from phonenumbers.phonenumberutil import country_code_for_region
 
-from ..account.models import User
+from ..account.models import User, Company
 from .i18n import AddressMetaForm, get_address_form_class
 from . import emails
 
@@ -94,6 +94,14 @@ class SignupForm(forms.ModelForm):
             user.save()
         return user
 
+
+class CompanySignupForm(forms.ModelForm):
+    class Meta:
+        model = Company
+        fields = ['company_name', 
+                  'company_desc', 
+                  'company_logo']
+        
 
 class PasswordResetForm(django_forms.PasswordResetForm):
     """Allow resetting passwords.

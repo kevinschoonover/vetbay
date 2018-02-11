@@ -3,7 +3,7 @@
 {% load staticfiles %}
 {% load i18n %}
 
-{% block title %}{% trans "Sign Up" context "Signup page title" %} — {{ block.super }}{% endblock %}
+{% block title %}{% trans "Company Registration" context "Company Registration page title" %} — {{ block.super }}{% endblock %}
 
 {% block meta_tags %}
   <meta name="robots" content="nofollow">
@@ -13,7 +13,7 @@
   <div class="col-lg-10 col-sm-12 m-auto">
     <div class="row login">
       <div class="col-md-6 login__form">
-        <form method="post" action="{% url 'account:signup' %}">
+        <form method="post" action="{% url 'account:signup' %}" novalidate>
           <fieldset>
             <h3>{% trans "Create an account" context "Signup form title" %}</h3>
             {% csrf_token %}

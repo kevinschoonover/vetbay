@@ -12,7 +12,7 @@ from ..cart.utils import find_and_assign_anonymous_cart
 from ..core.utils import get_paginator_items
 from .forms import (
     ChangePasswordForm, get_address_form, LoginForm, logout_on_password_change,
-    PasswordResetForm, SignupForm)
+    PasswordResetForm, SignupForm, CompanySignupForm)
 
 
 @find_and_assign_anonymous_cart()
@@ -46,7 +46,16 @@ def signup(request):
     ctx = {'form': form}
     return TemplateResponse(request, 'account/signup.html', ctx)
 
+@login_required
+def company_signup(request):
+    form = CompanySignupForm(request.POST, request.FILES)
+    if form.is_valid():
+        out = form.save()
+        return redirect('home')
+    ctx = {'form':form}
+    return TemplateResponse(request, 'account/company.html', ctx)
 
+      
 def password_reset(request):
     kwargs = {
         'template_name': 'account/password_reset.html',

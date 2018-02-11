@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.utils.translation import pgettext_lazy
 from django_countries.fields import Country, CountryField
 from phonenumber_field.modelfields import PhoneNumberField
-
+import uuid
 from .validators import validate_possible_number
 
 
@@ -85,9 +85,16 @@ class UserManager(BaseUserManager):
         return self.create_user(
             email, password, is_staff=True, is_superuser=True, **extra_fields)
 
+class Company(models.Model):
+    company_name = models.CharField(max_length=256, unique=True)
+    company_desc = models.CharField(max_length=256, blank=True)
+    company_logo = models.ImageField(width_field=None, height_field=None, blank=None)
+    company_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
 class User(PermissionsMixin, AbstractBaseUser):
     email = models.EmailField(unique=True)
     addresses = models.ManyToManyField(Address, blank=True)
+    company = models.OneToOneField(Company, on_delete=models.CASCADE)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now, editable=False)
@@ -125,8 +132,4 @@ class User(PermissionsMixin, AbstractBaseUser):
     def get_short_name(self):
         return self.email
 
-class Company():
-    company_name = models.CharField(max_length=256, unique=True)
-    company_desc = models.CharField(max_length=256, blank=True)
-    company_logo = models.ImageField(width_field=None, height_field=None, blank=None)
 
