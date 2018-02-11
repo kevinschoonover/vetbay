@@ -201,6 +201,14 @@
               </a>
             </li>
             {% if user.is_authenticated %}
+              {% if not user.company %}
+              <li>
+                <a href="{% url "account:company" %}" target="_blank" rel="noopener">
+                  {% trans "Become a Partner" context "Main navigation item" %}
+                </a>
+              </li>
+              {% endif %}
+
               {% if user.company and not user.is_staff %}
               <li>
                 <a href="{% url "dashboard:index" %}" target="_blank" rel="noopener">
