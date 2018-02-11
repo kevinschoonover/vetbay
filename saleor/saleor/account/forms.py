@@ -70,7 +70,7 @@ class LoginForm(django_forms.AuthenticationForm):
 class SignupForm(forms.ModelForm):
     password = forms.CharField(
         widget=forms.PasswordInput)
-    veteranstatus = forms.BooleanField(
+    is_veteran = forms.BooleanField(
         widget=forms.CheckboxInput
     )
 
@@ -82,8 +82,8 @@ class SignupForm(forms.ModelForm):
                 'Email', 'Email'),
             'password': pgettext_lazy(
                 'Password', 'Password'),
-        "Are you a veteran?": pgettext_lazy(
-            'is_Veteran', 'is_Veteran'
+        "is_veteran": pgettext_lazy(
+            'Is_Veteran', 'Is_Veteran'
         )}
 
     def __init__(self, *args, **kwargs):
@@ -95,9 +95,9 @@ class SignupForm(forms.ModelForm):
     def save(self, request=None, commit=True):
         user = super().save(commit=False)
         password = self.cleaned_data['password']
-        isveteran = self.veteranstatus
+        is_veteran = self.cleaned_data['is_veteran']
         user.set_password(password)
-        user.set_veteran(isveteran)
+        user.set_veteran(is_veteran)
         if commit:
             user.save()
         return user

@@ -78,6 +78,8 @@ class UserManager(BaseUserManager):
             **extra_fields)
         if password:
             user.set_password(password)
+        if is_veteran:
+            user.set_veteran(is_veteran)
         user.save()
         return user
 
@@ -97,7 +99,7 @@ class User(PermissionsMixin, AbstractBaseUser):
     company = models.OneToOneField(Company, on_delete=models.CASCADE)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    is_veteran = models.BooleanField(default=False)
+    is_veteran = models.NullBooleanField(default=False, blank=True)
     date_joined = models.DateTimeField(default=timezone.now, editable=False)
     default_shipping_address = models.ForeignKey(
         Address, related_name='+', null=True, blank=True,
