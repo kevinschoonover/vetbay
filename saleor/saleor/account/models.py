@@ -69,12 +69,12 @@ class Address(models.Model):
 class UserManager(BaseUserManager):
 
     def create_user(
-            self, email, password=None, is_staff=False, is_active=True,
+            self, email, password=None, is_staff=False, is_active=True, is_veteran=False,
             **extra_fields):
         """Create a user instance with the given email and password."""
         email = UserManager.normalize_email(email)
         user = self.model(
-            email=email, is_active=is_active, is_staff=is_staff,
+            email=email, is_active=is_active, is_staff=is_staff, is_veteran=is_veteran,
             **extra_fields)
         if password:
             user.set_password(password)
@@ -88,15 +88,16 @@ class UserManager(BaseUserManager):
 class Company(models.Model):
     company_name = models.CharField(max_length=256, unique=True)
     company_desc = models.CharField(max_length=256, blank=True)
-    company_logo = models.ImageField(width_field=None, height_field=None, blank=True, null=True)
+    company_logo = models.ImageField(width_field=None, height_field=None, blank=None)
     company_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
 class User(PermissionsMixin, AbstractBaseUser):
     email = models.EmailField(unique=True)
     addresses = models.ManyToManyField(Address, blank=True)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)
+    company = models.OneToOneField(Company, on_delete=models.CASCADE)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    is_veteran = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now, editable=False)
     default_shipping_address = models.ForeignKey(
         Address, related_name='+', null=True, blank=True,
@@ -131,5 +132,11 @@ class User(PermissionsMixin, AbstractBaseUser):
 
     def get_short_name(self):
         return self.email
+
+    def set_veteran(self, isornot):
+        self.is_veteran = isornot
+
+    def get_veteran_status(self):
+        return self.is_veteran
 
 
