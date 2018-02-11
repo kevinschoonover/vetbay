@@ -17,6 +17,7 @@ from prices import PriceRange
 from text_unidecode import unidecode
 from versatileimagefield.fields import PPOIField, VersatileImageField
 
+from ..account.models import Company
 from ..core.exceptions import InsufficientStock
 from ..discount.utils import calculate_discounted_price
 from .utils import get_attributes_display_map
@@ -101,6 +102,9 @@ class Product(models.Model):
     attributes = HStoreField(default={})
     updated_at = models.DateTimeField(auto_now=True, null=True)
     is_featured = models.BooleanField(default=False)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, blank=True,
+                                null=True)
+
 
     objects = ProductQuerySet.as_manager()
 
@@ -277,6 +281,8 @@ class ProductVariant(models.Model):
 
 class StockLocation(models.Model):
     name = models.CharField(max_length=100)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, blank=True,
+                                null=True)
 
     class Meta:
         permissions = (
@@ -392,6 +398,10 @@ class Collection(models.Model):
     slug = models.SlugField(max_length=255)
     products = models.ManyToManyField(
         Product, blank=True, related_name='collections')
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, blank=True,
+                                null=True)
+
+
 
     class Meta:
         ordering = ['pk']

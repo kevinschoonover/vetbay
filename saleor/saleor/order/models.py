@@ -14,7 +14,7 @@ from payments import PaymentStatus, PurchasedItem
 from payments.models import BasePayment
 from prices import FixedDiscount, Price
 
-from ..account.models import Address
+from ..account.models import Address, Company
 from ..core.utils import build_absolute_uri
 from ..discount.models import Voucher
 from ..product.models import Product
@@ -71,6 +71,9 @@ class Order(models.Model):
         currency=settings.DEFAULT_CURRENCY, max_digits=12, decimal_places=2,
         blank=True, null=True)
     discount_name = models.CharField(max_length=255, default='', blank=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, blank=True,
+                                null=True)
+
 
     objects = OrderQuerySet.as_manager()
 

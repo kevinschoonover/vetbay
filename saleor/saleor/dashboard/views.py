@@ -30,17 +30,42 @@ def superuser_required(
     return actual_decorator
 
 
-@staff_member_required
+def company_or_superuser(
+        view_func=None, redirect_field_name=REDIRECT_FIELD_NAME,
+        login_url='account:login'):
+    actual_decorator = user_passes_test(
+        lambda u: u.is_active and (u.is_superuser or u.company),
+        login_url=login_url,
+        redirect_field_name=redirect_field_name)
+    if view_func:
+        return actual_decorator(view_func)
+    return actual_decorator
+
+
+@company_or_superuser
 def index(request):
     paginate_by = 10
     orders_to_ship = Order.objects.open().select_related(
         'user').prefetch_related('groups', 'groups__lines', 'payments')
-    orders_to_ship = [
-        order for order in orders_to_ship if order.is_fully_paid()]
-    payments = Payment.objects.filter(
-        status=PaymentStatus.PREAUTH).order_by('-created')
-    payments = payments.select_related('order', 'order__user')
-    low_stock = get_low_stock_products()
+    if request.user.is_superuser:
+        if user.is_superadmin:
+            payments = Payment.objects.filter(
+                status=PaymentStatus.PREAUTH
+            ).order_by('-created')
+            orders_to_ship = [
+                order for order in orders_to_ship if order.is_fully_paid()]
+        else:
+            payments = Payment.objects.filter(
+                status=PaymentStatus.PREAUTH
+            ).filter(company=request.user.company).order_by('-created')
+            orders_to_ship = [
+                order for order in orders_to_ship
+                if order.is_filly_paid() and order.company == request.user.company
+            ]
+
+        payments = payments.select_related('order', 'order__user')
+
+        low_stock = get_low_stock_products()
     ctx = {'preauthorized_payments': payments[:paginate_by],
            'orders_to_ship': orders_to_ship[:paginate_by],
            'low_stock': low_stock[:paginate_by]}
@@ -56,4 +81,13 @@ def get_low_stock_products():
     threshold = getattr(settings, 'LOW_STOCK_THRESHOLD', 10)
     products = Product.objects.annotate(
         total_stock=Sum('variants__stock__quantity'))
-    return products.filter(Q(total_stock__lte=threshold)).distinct()
+    if user.is_superadmin:
+        return products.filter(Q(total_stock__lte=threshold)).distinct()
+    else:
+        return (
+            products.filter(Q(total_stock__lte=threshold)).filter(
+                company=request.user.company
+            ).distinct()
+        )
+
+
