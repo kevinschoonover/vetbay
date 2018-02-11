@@ -30,6 +30,13 @@
 
   <link rel="manifest" href="{% url "manifest" %}" />
 
+  <style>
+	@media (max-width: 500px) {
+		img {
+		display:none;
+		}
+		}
+  </style>
   <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
   <!--[if lt IE 9]>
     <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -96,7 +103,7 @@
               <span>{% trans "menu" context "Hamburger button text" %}</span>
             </div>
             <a href="{% url 'home' %}">
-              <svg data-src="{% static "images/logo.svg" %}" height="38px" width="176px"/>
+              <img src="{% static "images/logopng.png" %}" width="250px" height="60px">
             </a>
           </div>
           <div class="col-2 col-md-4 navbar__search static">
@@ -179,7 +186,7 @@
       <div class="row">
         <div class="col-md-3">
           <a href="{% url 'home' %}" class="footer__logo">
-            <svg data-src="{% static "images/logo.svg" %}" height="38px" width="176px"/>
+            <img src="static/images/logopng.png" width="250px" height="60px">
           </a>
         </div>
         <div class="col-md-3 col-sm-6">
