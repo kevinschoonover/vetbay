@@ -22,7 +22,7 @@
     "detect-passive-events": "^1.0.4",
     "dropzone": "^5.2.0",
     "favicons-webpack-plugin": "^0.0.7",
-    "jquery": "^3.1.1",
+    "jquery": "^3.5.0",
     "jquery.cookie": "^1.4.1",
     "lazysizes": "^4.0.1",
     "materialize-css": "^0.100.2",
